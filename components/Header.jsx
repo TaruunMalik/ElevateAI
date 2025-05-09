@@ -71,7 +71,14 @@ async function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   {" "}
-                  <Link href={"/resume"} className=" flex gap-2 items-center">
+                  <Link href={"/liveinterview"} className=" flex gap-2 items-center">
+                    <FileText />
+                    <span>Video Interview</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  {" "}
+                  <Link href={"/interview"} className=" flex gap-2 items-center">
                     <FileText />
                     <span>Interview</span>
                   </Link>
