@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import QuizResult from "./quiz-result";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -116,8 +117,7 @@ export default function Quiz() {
   if (resultData) {
     return (
       <div className="mx-2">
-        pam pa ram pam pam pa ram
-        {/* <QuizResult result={resultData} onStartNew={startNewQuiz} /> */}
+        <QuizResult result={resultData} onStartNew={startNewQuiz} />
       </div>
     );
   }

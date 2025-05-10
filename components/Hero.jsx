@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
+
 function HeroSection() {
   const imageRef = useRef(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Set mounted state to true after component mounts
+    setIsMounted(true);
+
     const imageElement = imageRef.current;
 
     const handleScroll = () => {
@@ -21,9 +26,11 @@ function HeroSection() {
       }
     };
 
+    // Only add event listener after component mounts on client
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <section className="w-full pt-36 md:pt-48 pb-10">
       <div className="space-y-6 text-center">
@@ -39,11 +46,9 @@ function HeroSection() {
           </p>
         </div>
         <div className="flex justify-center space-x-4">
-          <Link href="/dashboard">
-            <Button size="lg" className="px-8">
-              Get Started
-            </Button>
-          </Link>
+          <Button size="lg" className="px-8">
+            Get Started
+          </Button>
         </div>
         <div className="hero-image-wrapper mt-5 md:mt-0">
           <div ref={imageRef} className="hero-image">

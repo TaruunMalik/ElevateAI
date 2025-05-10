@@ -58,7 +58,9 @@ const DashboardView = ({ insights }) => {
   const outlookColor = getMarketOutlookInfo(data.marketOutlook).color;
   return (
     <div className="p-6 mx-auto  rounded-xl shadow-md space-y-4 max-w-7xl">
-      <h2 className="text-2xl font-bold">AI/ML Job Market Overview</h2>
+      <h2 className="text-2xl font-bold">
+        {data?.industry} Job Market Overview
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -200,9 +202,9 @@ const DashboardView = ({ insights }) => {
           </CardContent>
         </Card>
       </div>
-      <p className="text-gray-600 text-sm">
+      {/* <p className="text-gray-600 text-sm">
         Last Updated: {new Date(data.lastUpdated).toDateString()}
-      </p>
+      </p> */}
     </div>
   );
 };
