@@ -5,7 +5,15 @@ import StatsCards from "./_components/statscards";
 import PerformanceChart from "./_components/performance-chart";
 import { Button } from "@/components/ui/button";
 import QuizList from "./_components/quiz-list";
+import { redirect } from "next/navigation";
+import { onboardingstatus } from "@/actions/user";
 async function MockInterview() {
+  const resu = await onboardingstatus();
+
+  // Redirect early if not onboarded
+  if (!resu?.isOnboarded) {
+    redirect("/onboarding");
+  }
   const assessments = await getAssessments();
 
   return (

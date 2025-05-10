@@ -1,6 +1,7 @@
 import { getResume } from "@/actions/resume";
 import React from "react";
 import ResumeBuilder from "./_components/resume-builder";
+
 async function ResumePage() {
   const resume = await getResume();
 

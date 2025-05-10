@@ -130,13 +130,13 @@ async function Header() {
                     <FileText />
                     <span>Cover Letter</span>
                   </Link>
-                  <Link
+                  {/* <Link
                     href={"/liveinterview"}
                     className=" flex gap-2 items-center"
                   >
                     <FileText />
                     <span>Video Interview</span>
-                  </Link>
+                  </Link> */}
                   <Link
                     href={"/interview"}
                     className=" flex gap-2 items-center"
