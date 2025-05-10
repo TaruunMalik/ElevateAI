@@ -1,18 +1,13 @@
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack(config) {
-    // Example: Set up a path alias using __dirname
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@": path.resolve(__dirname, "src"),
-    };
-    return config;
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "randomuser.me",
+      },
+    ],
   },
 };
 
-export default nextConfig; // Export the variable instead of directly exporting the object
+export default nextConfig;
