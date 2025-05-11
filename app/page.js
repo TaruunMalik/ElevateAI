@@ -104,15 +104,15 @@ export default function Home() {
               with AI-powered guidance.
             </p>
 
-            <Button
-              size="lg"
-              variant="secondary"
-              className="h-11 mt-5 animate-bounce"
-            >
-              <Link href={"/dashboard"}>
+            <Link href={"/dashboard"}>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="h-11 mt-5 animate-bounce"
+              >
                 Start Your Journey Today <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

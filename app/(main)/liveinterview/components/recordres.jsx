@@ -1,4 +1,3 @@
-// pages/interview.js
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -7,43 +6,7 @@ export default function RecordRes() {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [finalTranscript, setFinalTranscript] = useState("");
-  const videoRef = useRef(null);
   const recognitionRef = useRef(null);
-  const streamRef = useRef(null);
-
-  // Setup camera
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream;
-      }
-    } catch (err) {
-      console.error("Error accessing camera:", err);
-    }
-  };
-
-  const stopCamera = () => {
-    if (streamRef.current) {
-      const tracks = streamRef.current.getTracks();
-      tracks.forEach((track) => track.stop());
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
-      streamRef.current = null;
-    }
-  };
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      stopCamera(); // Ensure camera is off when component unmounts
-    };
-  }, []);
 
   // Setup speech recognition
   useEffect(() => {
@@ -85,12 +48,10 @@ export default function RecordRes() {
       // Start recording
       setTranscript("");
       setFinalTranscript("");
-      startCamera(); // Start camera when recording begins
       recognitionRef.current?.start();
     } else {
       // Stop recording
       recognitionRef.current?.stop();
-      stopCamera(); // Stop camera when recording stops
     }
     setIsRecording(!isRecording);
   };
@@ -98,14 +59,7 @@ export default function RecordRes() {
   return (
     <div className="max-w-2xl mx-auto p-5 text-center">
       <h1 className="text-2xl font-bold mb-5">Interview Recorder</h1>
-      <div className="my-5">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          className="w-full max-w-[600px] h-auto rounded-lg bg-black mx-auto"
-        />
-      </div>
+
       <button
         onClick={handleToggleRecording}
         className="px-5 py-2.5 text-lg bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
