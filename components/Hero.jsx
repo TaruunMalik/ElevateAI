@@ -47,7 +47,7 @@ function HeroSection() {
         </div>
         <div className="flex justify-center space-x-4">
           <Button size="lg" className="px-8">
-            Get Started
+            <Link href={"/dashboard"}>Get Started</Link>
           </Button>
         </div>
         <div className="hero-image-wrapper mt-5 md:mt-0">

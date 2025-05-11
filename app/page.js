@@ -109,7 +109,9 @@ export default function Home() {
               variant="secondary"
               className="h-11 mt-5 animate-bounce"
             >
-              Start Your Journey Today <ArrowRight className="ml-2 h-4 w-4" />
+              <Link href={"/dashboard"}>
+                Start Your Journey Today <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>

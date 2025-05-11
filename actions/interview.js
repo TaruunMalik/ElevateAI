@@ -7,7 +7,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-export async function generateQuiz() {
+export async function generateQuiz({ difficulty = "medium" } = {}) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
@@ -21,12 +21,28 @@ export async function generateQuiz() {
 
   if (!user) throw new Error("User not found");
 
+  // Map difficulty to descriptive terms for better prompt context
+  const difficultyMap = {
+    easy: "entry-level, fundamental knowledge",
+    medium: "intermediate-level, practical knowledge",
+    hard: "advanced-level, specialized knowledge",
+  };
+
+  const difficultyDescription =
+    difficultyMap[difficulty] || difficultyMap.medium;
+
   const prompt = `
-    Generate 10 technical interview questions for a ${
-      user.industry
-    } professional${
+    Generate 10 ${difficulty} technical interview questions for a ${
+    user.industry
+  } professional${
     user.skills?.length ? ` with expertise in ${user.skills.join(", ")}` : ""
-  }.
+  }. 
+    
+    The questions should be ${difficultyDescription} questions.
+    
+    For easy questions: focus on fundamental concepts and basic knowledge.
+    For medium questions: include practical applications and moderate complexity.
+    For hard questions: cover advanced topics, edge cases, and complex scenarios.
     
     Each question should be multiple choice with 4 options.
     
@@ -37,7 +53,7 @@ export async function generateQuiz() {
           "question": "string",
           "options": ["string", "string", "string", "string"],
           "correctAnswer": "string",
-          "explanation": "string"
+          "explanation": "string",
         }
       ]
     }
@@ -56,7 +72,6 @@ export async function generateQuiz() {
     throw new Error("Failed to generate quiz questions");
   }
 }
-
 export async function saveQuizResult(questions, answers, score) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");

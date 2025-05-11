@@ -10,9 +10,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { generateQuiz, saveQuizResult } from "@/actions/interview";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
@@ -21,29 +29,33 @@ export default function Quiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [showExplanation, setShowExplanation] = useState(false);
-  //   const [savingResult, setSavingResult] = useState(false);
+  const [difficulty, setDifficulty] = useState("medium");
 
   const {
     loading: generatingQuiz,
     fn: generateQuizFn,
     data: quizData,
-  } = useFetch(generateQuiz);
+  } = useFetch((params) => generateQuiz(params));
+
   const {
     loading: savingResult,
     fn: saveQuizResultFn,
     data: resultData,
     setData: setResultData,
   } = useFetch(saveQuizResult);
+
   useEffect(() => {
     if (quizData) {
       setAnswers(new Array(quizData.length).fill(null));
     }
   }, [quizData]);
+
   const handleAnswer = (answer) => {
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = answer;
     setAnswers(newAnswers);
   };
+
   const calculateScore = () => {
     let correct = 0;
     answers.forEach((answer, index) => {
@@ -53,31 +65,35 @@ export default function Quiz() {
     });
     return (correct / quizData.length) * 100;
   };
+
   const finishQuiz = async () => {
     const score = calculateScore();
     try {
-      await saveQuizResultFn(quizData, answers, score);
+      await saveQuizResultFn(quizData, answers, score, difficulty);
     } catch (error) {
       console.log(error.message);
     }
   };
+
   const handleNext = async () => {
     setShowExplanation(false);
 
     if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
-      //   try {
-      //     setSavingResult(true);
-      //     await saveQuizResult(quizData, answers);
-      //     toast.success("Quiz results saved!");
-      //   } catch (error) {
-      //     toast.error("Failed to save quiz results.");
-      //   } finally {
-      //     setSavingResult(false);
-      //   }
       finishQuiz();
     }
+  };
+
+  const startQuiz = () => {
+    generateQuizFn({ difficulty });
+  };
+
+  const startNewQuiz = () => {
+    setCurrentQuestion(0);
+    setAnswers([]);
+    setShowExplanation(false);
+    setResultData(null);
   };
 
   if (generatingQuiz) {
@@ -89,36 +105,52 @@ export default function Quiz() {
       <Card className="mx-2">
         <CardHeader>
           <CardTitle>Ready to test your knowledge?</CardTitle>
+          <CardDescription>Choose your difficulty level below</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <p className="text-muted-foreground">
             This quiz contains 10 questions specific to your industry and
             skills. Take your time and choose the best answer for each question.
           </p>
+
+          <div className="space-y-2">
+            <Label htmlFor="difficulty">Difficulty Level</Label>
+            <Select
+              value={difficulty}
+              onValueChange={(value) => setDifficulty(value)}
+            >
+              <SelectTrigger id="difficulty" className="w-full">
+                <SelectValue placeholder="Select difficulty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="easy">Easy</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={generateQuizFn} className="w-full">
+          <Button onClick={startQuiz} className="w-full">
             Start Quiz
           </Button>
         </CardFooter>
       </Card>
     );
   }
-  const startNewQuiz = () => {
-    setCurrentQuestion(0);
-    setAnswers([]);
-    setShowExplanation(false);
-    generateQuizFn();
-    setResultData(null);
-  };
 
   if (resultData) {
     return (
       <div className="mx-2">
-        <QuizResult result={resultData} onStartNew={startNewQuiz} />
+        <QuizResult
+          result={resultData}
+          onStartNew={startNewQuiz}
+          difficulty={difficulty}
+        />
       </div>
     );
   }
+
   const question = quizData[currentQuestion];
 
   return (
@@ -127,6 +159,9 @@ export default function Quiz() {
         <CardTitle>
           Question {currentQuestion + 1} of {quizData.length}
         </CardTitle>
+        <CardDescription>
+          Difficulty: {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-lg font-medium">{question.question}</p>

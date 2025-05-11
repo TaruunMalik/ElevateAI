@@ -25,6 +25,7 @@ model User {
   // Relations
   skills        String[]  // Array of skills
   assessments   Assessment[]
+  voiceAssessments VoiceAssessment[]
   resume        Resume?
   coverLetter   CoverLetter[]
 }
@@ -39,6 +40,18 @@ model Assessment {
   improvementTip String?  // AI-generated improvement tip
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+}
+model VoiceAssessment {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  category        String    // "Technical", "Behavioral", etc.
+  responses       Json[]    // Array of { question: String, transcripts: [String], aiEvaluation?: String, score?: Float }
+  improvementTip  String?   // AI-generated improvement tip
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@index([userId])
 }

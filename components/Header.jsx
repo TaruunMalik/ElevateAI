@@ -24,7 +24,10 @@ import {
   FileText,
   LayoutDashboard,
   StarsIcon,
+  BookOpenCheck,
+  BookOpenText,
 } from "lucide-react";
+
 import Image from "next/image";
 import { checkUser } from "@/lib/checkUser";
 async function Header() {
@@ -127,7 +130,7 @@ async function Header() {
                     href={"/cover-letter"}
                     className=" flex gap-2 items-center"
                   >
-                    <FileText />
+                    <BookOpenText />
                     <span>Cover Letter</span>
                   </Link>
                   {/* <Link
@@ -141,13 +144,13 @@ async function Header() {
                     href={"/interview"}
                     className=" flex gap-2 items-center"
                   >
-                    <FileText />
+                    <BookOpenCheck />
                     <span>Interview</span>
                   </Link>
                 </div>
                 <SheetFooter>
                   <SheetClose asChild>
-                    <Button type="submit">Save changes</Button>
+                    <Button>Close</Button>
                   </SheetClose>
                 </SheetFooter>
               </SheetContent>
