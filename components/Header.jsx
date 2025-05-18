@@ -26,14 +26,13 @@ import {
   StarsIcon,
   BookOpenCheck,
   BookOpenText,
+  SquareDashedBottom,
 } from "lucide-react";
 
 import Image from "next/image";
 import { checkUser } from "@/lib/checkUser";
 async function Header() {
   await checkUser();
-  // const resu = await onboardingstatus();
-
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
       <nav className=" container mx-auto px-4 h-16 flex items-center justify-between">
@@ -42,16 +41,10 @@ async function Header() {
         </Link>
         <div className=" flex items-center justify-center gap-4">
           <SignedIn>
-            <Link
-              //  href={resu ? "/dashboard" : "/onboarding"}
-              href={"/dashboard"}
-            >
+            <Link href={"/dashboard"}>
               <Button>
                 <LayoutDashboard className="h-4 w-4" />
-                <span className=" hidden md:block">
-                  {/* {resu ? "Industry" : "Onboarding"} */}
-                  Industry
-                </span>
+                <span className=" hidden md:block">Industry</span>
               </Button>
             </Link>
           </SignedIn>
@@ -62,49 +55,6 @@ async function Header() {
           </SignedOut>
 
           <SignedIn>
-            {/* <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button variant="outline">
-                  <StarsIcon />
-                  <span>Tools</span>
-                  <ChevronDown />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href={"/resume"} className=" flex gap-2 items-center">
-                    <FileText />
-                    <span>Build Resume</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href={"/resume"} className=" flex gap-2 items-center">
-                    <FileText />
-                    <span>Cover Letter</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  {" "}
-                  <Link
-                    href={"/liveinterview"}
-                    className=" flex gap-2 items-center"
-                  >
-                    <FileText />
-                    <span>Video Interview</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  {" "}
-                  <Link
-                    href={"/interview"}
-                    className=" flex gap-2 items-center"
-                  >
-                    <FileText />
-                    <span>Interview</span>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu> */}
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline">
@@ -133,13 +83,13 @@ async function Header() {
                     <BookOpenText />
                     <span>Cover Letter</span>
                   </Link>
-                  {/* <Link
-                    href={"/liveinterview"}
+                  <Link
+                    href={"/dashboard"}
                     className=" flex gap-2 items-center"
                   >
-                    <FileText />
-                    <span>Video Interview</span>
-                  </Link> */}
+                    <SquareDashedBottom />
+                    <span>Industry Insights</span>
+                  </Link>
                   <Link
                     href={"/interview"}
                     className=" flex gap-2 items-center"

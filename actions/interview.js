@@ -7,7 +7,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-export async function generateQuiz({ difficulty = "medium" } = {}) {
+export async function generateQuiz({ difficulty = "medium", count = 10 } = {}) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
@@ -32,7 +32,7 @@ export async function generateQuiz({ difficulty = "medium" } = {}) {
     difficultyMap[difficulty] || difficultyMap.medium;
 
   const prompt = `
-    Generate 10 ${difficulty} technical interview questions for a ${
+    Generate ${count} ${difficulty} technical interview questions for a ${
     user.industry
   } professional${
     user.skills?.length ? ` with expertise in ${user.skills.join(", ")}` : ""

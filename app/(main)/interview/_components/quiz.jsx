@@ -30,6 +30,7 @@ export default function Quiz() {
   const [answers, setAnswers] = useState([]);
   const [showExplanation, setShowExplanation] = useState(false);
   const [difficulty, setDifficulty] = useState("medium");
+  const [numQuestions, setNumQuestions] = useState("10");
 
   const {
     loading: generatingQuiz,
@@ -86,7 +87,7 @@ export default function Quiz() {
   };
 
   const startQuiz = () => {
-    generateQuizFn({ difficulty });
+    generateQuizFn({ difficulty, count: parseInt(numQuestions) });
   };
 
   const startNewQuiz = () => {
@@ -126,6 +127,23 @@ export default function Quiz() {
                 <SelectItem value="easy">Easy</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="num-questions">Number of Questions</Label>
+            <Select
+              value={numQuestions}
+              onValueChange={(value) => setNumQuestions(value)}
+            >
+              <SelectTrigger id="num-questions" className="w-full">
+                <SelectValue placeholder="Select number" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="15">15</SelectItem>
+                <SelectItem value="20">20</SelectItem>
               </SelectContent>
             </Select>
           </div>

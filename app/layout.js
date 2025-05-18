@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "ElevateAI",
-  description: "Your Guruji",
+  description: "Helps to crack interview.",
 };
 
 export default function RootLayout({ children }) {
