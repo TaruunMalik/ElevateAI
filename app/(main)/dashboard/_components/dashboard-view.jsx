@@ -163,7 +163,7 @@ const DashboardView = ({ insights }) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row gap-1">
+            <div className="flex flex-wrap gap-1">
               {insights.keyTrends.map((trend, index) => (
                 <Badge key={index}>{trend}</Badge>
               ))}
