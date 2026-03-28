@@ -1,12 +1,12 @@
-import '@testing-library/jest-dom'
-import { TextEncoder, TextDecoder } from 'util'
+import "@testing-library/jest-dom";
+import { TextEncoder, TextDecoder } from "util";
 
 // Add Node.js global for TextEncoder/TextDecoder
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
@@ -15,25 +15,25 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => ({
     get: jest.fn(),
   }),
-  usePathname: () => '/',
-}))
+  usePathname: () => "/",
+}));
 
 // Mock clerk auth
-jest.mock('@clerk/nextjs/server', () => ({
+jest.mock("@clerk/nextjs/server", () => ({
   auth: jest.fn(),
-}))
+}));
 
 // Mock Google Generative AI BEFORE prisma is loaded
-jest.mock('@google/generative-ai', () => ({
+jest.mock("@google/generative-ai", () => ({
   GoogleGenerativeAI: jest.fn(() => ({
     getGenerativeModel: jest.fn(() => ({
       generateContent: jest.fn(),
     })),
   })),
-}))
+}));
 
 // Mock prisma db
-jest.mock('@/lib/prisma', () => ({
+jest.mock("@/lib/prisma", () => ({
   db: {
     user: {
       findUnique: jest.fn(),
@@ -67,10 +67,10 @@ jest.mock('@/lib/prisma', () => ({
     },
     $transaction: jest.fn(),
   },
-}))
+}));
 
 // Mock next/cache
-jest.mock('next/cache', () => ({
+jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
   revalidateTag: jest.fn(),
-}))
+}));
