@@ -5,7 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export async function generateCoverLetter(data) {
   const { userId } = await auth();
@@ -19,8 +19,8 @@ export async function generateCoverLetter(data) {
 
   const prompt = `
     Write a professional cover letter for a ${data.jobTitle} position at ${
-    data.companyName
-  }.
+      data.companyName
+    }.
     
     About the candidate:
     - Industry: ${user.industry}

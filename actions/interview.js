@@ -3,9 +3,14 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  DIFFICULTY_MAP,
+  generateQuizPrompt,
+  generateImprovementPrompt,
+} from "@/lib/prompts";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export async function generateQuiz({ difficulty = "medium", count = 10 } = {}) {
   const { userId } = await auth();
@@ -21,43 +26,16 @@ export async function generateQuiz({ difficulty = "medium", count = 10 } = {}) {
 
   if (!user) throw new Error("User not found");
 
-  // Map difficulty to descriptive terms for better prompt context
-  const difficultyMap = {
-    easy: "entry-level, fundamental knowledge",
-    medium: "intermediate-level, practical knowledge",
-    hard: "advanced-level, specialized knowledge",
-  };
-
   const difficultyDescription =
-    difficultyMap[difficulty] || difficultyMap.medium;
+    DIFFICULTY_MAP[difficulty] || DIFFICULTY_MAP.medium;
 
-  const prompt = `
-    Generate ${count} ${difficulty} technical interview questions for a ${
-    user.industry
-  } professional${
-    user.skills?.length ? ` with expertise in ${user.skills.join(", ")}` : ""
-  }. 
-    
-    The questions should be ${difficultyDescription} questions.
-    
-    For easy questions: focus on fundamental concepts and basic knowledge.
-    For medium questions: include practical applications and moderate complexity.
-    For hard questions: cover advanced topics, edge cases, and complex scenarios.
-    
-    Each question should be multiple choice with 4 options.
-    
-    Return the response in this JSON format only, no additional text:
-    {
-      "questions": [
-        {
-          "question": "string",
-          "options": ["string", "string", "string", "string"],
-          "correctAnswer": "string",
-          "explanation": "string",
-        }
-      ]
-    }
-  `;
+  const prompt = generateQuizPrompt({
+    count,
+    difficulty,
+    difficultyDescription,
+    industry: user.industry,
+    skills: user.skills,
+  });
 
   try {
     const result = await model.generateContent(prompt);
@@ -99,20 +77,14 @@ export async function saveQuizResult(questions, answers, score) {
     const wrongQuestionsText = wrongAnswers
       .map(
         (q) =>
-          `Question: "${q.question}"\nCorrect Answer: "${q.answer}"\nUser Answer: "${q.userAnswer}"`
+          `Question: "${q.question}"\nCorrect Answer: "${q.answer}"\nUser Answer: "${q.userAnswer}"`,
       )
       .join("\n\n");
 
-    const improvementPrompt = `
-      The user got the following ${user.industry} technical interview questions wrong:
-
-      ${wrongQuestionsText}
-
-      Based on these mistakes, provide a concise, specific improvement tip.
-      Focus on the knowledge gaps revealed by these wrong answers.
-      Keep the response under 2 sentences and make it encouraging.
-      Don't explicitly mention the mistakes, instead focus on what to learn/practice.
-    `;
+    const improvementPrompt = generateImprovementPrompt(
+      user.industry,
+      wrongQuestionsText,
+    );
 
     try {
       const tipResult = await model.generateContent(improvementPrompt);
